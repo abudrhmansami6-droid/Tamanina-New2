@@ -1,0 +1,509 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#173d32">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="طمأنينة">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" href="./icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="./icon-192.png">
+<title>طمأنينة | عالمي مع الذكر</title>
+<style>
+:root{--green:#173d32;--green2:#285a46;--cream:#fff7e6;--gold:#c9a15c;--ink:#203a2d}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:linear-gradient(160deg,#f8e9cf,#e4edda 58%,#d3e4d1);font-family:system-ui,-apple-system,"Segoe UI",Tahoma,sans-serif;color:var(--ink)}
+.app{max-width:520px;margin:auto;min-height:100vh;padding:15px 14px 25px;display:flex;flex-direction:column;gap:12px}
+header{display:flex;justify-content:space-between;align-items:center}
+.brand{font-weight:850;font-size:18px;color:var(--green)}
+.pill{border:1px solid #d9c18b;background:#fff8e9;border-radius:18px;padding:8px 12px;font-size:13px}
+h1{text-align:center;margin:5px 0 0;font-size:28px;color:#1d563d}
+.subtitle{text-align:center;margin:0;color:#6b765e;font-size:13px}
+.phrases{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+.phrases button{border:1px solid #d7c69e;background:#fff8e9;color:#31523c;border-radius:14px;padding:11px 3px;font-size:14px;font-weight:800}
+.phrases button.active{background:#1c4b39;color:#fff;border-color:#1c4b39;box-shadow:0 3px 9px #244a3430}
+.scene{height:355px;position:relative;overflow:hidden;border-radius:25px;border:3px solid #fff9eb;box-shadow:0 8px 24px #53694a35;background:linear-gradient(#f7dba9 0%,#dcebcf 58%,#9ab58a 100%);transition:background .5s}
+.sun{position:absolute;top:24px;left:34px;width:53px;height:53px;border-radius:50%;background:#fff2c5;box-shadow:0 0 36px #fff4c5}
+.distant{position:absolute;bottom:65px;left:-10%;width:120%;height:120px;background:#8da982;border-radius:50% 50% 0 0}
+.distant:after{content:"";position:absolute;bottom:0;left:25%;width:100%;height:95px;background:#6f936d;border-radius:50% 50% 0 0}
+.ground{position:absolute;bottom:0;height:68px;width:100%;background:linear-gradient(#a8794f,#765238);border-top:5px solid #d5b17b;box-shadow:0 -4px 12px #30452b33}
+.flower{position:absolute;bottom:46px;font-size:24px;filter:drop-shadow(0 2px 2px #5555)}
+.flower.f1{left:8%}.flower.f2{right:9%}.flower.f3{left:25%;font-size:18px}
+.jar-shell{position:absolute;z-index:3;bottom:37px;left:50%;transform:translateX(-50%);width:220px;height:275px}
+.jar-mouth{position:absolute;z-index:2;top:0;left:22px;width:176px;height:27px;border:7px solid #fff9e9;border-radius:50%;background:#ffffff66;box-shadow:0 3px 5px #4a503833}
+.jar-glass{position:absolute;top:12px;bottom:0;left:0;right:0;border:5px solid #ffffffb8;border-top:3px solid #fff9e9;border-radius:32px 32px 25px 25px;background:linear-gradient(90deg,#ffffff78,#ffffff12 22%,#ffffff30 70%,#ffffff8a);box-shadow:inset 9px 0 17px #fff9,inset -8px 0 15px #fff8,0 8px 14px #354c3540;overflow:hidden}
+.jar-glass:before{content:"";position:absolute;left:12px;top:22px;bottom:20px;width:9px;border-radius:20px;background:#ffffff70;filter:blur(2px)}
+.jar-glass:after{content:"";position:absolute;right:15px;top:45px;bottom:20px;width:4px;border-radius:20px;background:#ffffff55}
+#beadCanvas{position:absolute;inset:0;width:100%;height:100%}
+.jar-caption{position:absolute;z-index:4;top:87px;left:24px;right:24px;text-align:center;border:2px solid #d7b66d;border-radius:14px;background:#fff7e8ed;padding:7px 3px;color:#294d38;font-size:12px;font-weight:700;pointer-events:none}
+.jar-caption strong{display:block;font-size:27px;line-height:1.2}
+.plant{position:absolute;z-index:2;bottom:42px;left:20px;font-size:55px;filter:drop-shadow(0 3px 3px #3345)}
+.scene.garden{background:linear-gradient(#d9f0d8,#a8d19b 60%,#6f9c67)}
+#forestCanvas{position:absolute;inset:0;width:100%;height:100%;display:none}
+.scene.garden #forestCanvas{display:block}
+.scene.garden .sun{display:block;top:22px;left:28px;width:48px;height:48px}
+.forest-label{position:absolute;z-index:5;top:14px;left:12px;right:12px;text-align:center;color:#24533e;font-weight:850;font-size:13px;text-shadow:0 1px 0 #ffffffaa;pointer-events:none}
+.forest-label b{display:inline-block;background:#ffffffc9;border:1px solid #ffffff;border-radius:20px;padding:6px 12px;box-shadow:0 3px 10px #244a3420}
+.scene.garden .distant,.scene.garden .ground,.scene.garden .flower,.scene.garden .plant{display:none}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+.stat{background:#fff8e9;border:1px solid #e1d0a9;border-radius:14px;padding:9px 3px;text-align:center;font-size:11px;color:#68715e}
+.stat b{display:block;font-size:21px;color:var(--green)}
+.action{border:0;border-radius:19px;background:linear-gradient(#fff5d9,#e8c77d);color:#174632;font-size:25px;font-weight:900;padding:15px;box-shadow:0 5px 0 #b48a43,0 9px 18px #5c704333;touch-action:manipulation}
+.action:active{transform:translateY(3px);box-shadow:0 2px 0 #b48a43}
+.hint{text-align:center;font-size:12px;color:#6b765e;margin:0}
+.worlds{display:flex;gap:8px}
+.worlds button{flex:1;border:1px solid #d8c69b;background:#fff8e9;color:#31523c;padding:9px 4px;border-radius:13px;font-weight:700;font-size:12px}
+.worlds button.active{background:#315b43;color:white}
+.reset{border:0;background:transparent;color:#7b806e;text-decoration:underline;font-size:11px;padding:4px}
+footer{text-align:center;font-size:10px;color:#78816f}
+@media(max-height:740px){.scene{height:315px}.jar-shell{transform:translateX(-50%) scale(.9);transform-origin:bottom center}}
+
+.extra-page{min-height:65vh;padding:8px 2px 18px}.extra-page h2{text-align:center;color:var(--green);margin:8px 0}.page-lead{text-align:center;color:#6b765e;font-size:13px;margin:0 0 16px}
+.bottom-nav{position:sticky;bottom:8px;z-index:20;display:grid;grid-template-columns:repeat(6,1fr);gap:3px;padding:7px 4px;background:#fffaf0ed;border:1px solid #e4d4ad;border-radius:18px;box-shadow:0 5px 18px #344b3220;backdrop-filter:blur(10px)}
+.bottom-nav button{border:0;background:transparent;color:#667463;border-radius:12px;padding:7px 1px;font-size:17px;display:flex;flex-direction:column;align-items:center;gap:3px}.bottom-nav button span{font-size:10px;font-weight:700}.bottom-nav button.active{background:#e3ecd9;color:#1c4b39}
+.quick-list{display:grid;gap:9px}.quick-list button{border:1px solid #dfd0a9;background:#fffaf0;border-radius:15px;padding:14px;text-align:right;color:#244b38;font-weight:800;font-size:16px;box-shadow:0 3px 9px #465b3210}.quick-list button span{display:block;font-size:11px;font-weight:500;color:#78816f;margin-top:4px}
+.soft-card,.dua-card{background:#fffaf0;border:1px solid #e2d3ad;border-radius:18px;padding:15px;margin:12px 0;box-shadow:0 5px 16px #465b3210}.soft-card p,.dua-card p{line-height:1.9;margin:8px 0 0;color:#52634f;font-size:14px}.goal-card{text-align:center}.goal-number{display:flex;justify-content:center;align-items:baseline;gap:9px;color:var(--green);font-size:18px}.goal-number b{font-size:34px}.progress{height:13px;background:#e8e2d0;border-radius:20px;overflow:hidden;margin:14px 0}.progress i{display:block;height:100%;width:0;background:linear-gradient(90deg,#7da77b,#c9a15c);border-radius:20px;transition:width .3s}.goal-card label{display:block;text-align:right;font-size:13px;margin-top:18px}.goal-edit{display:flex;gap:8px;margin-top:7px}.goal-edit input{min-width:0;flex:1;border:1px solid #d9caa7;border-radius:12px;padding:10px;font:inherit}.goal-edit button,.contact-link{border:0;border-radius:12px;background:#24533e;color:white;padding:10px 14px;font-weight:700;text-decoration:none}.mini-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.mini-stats .soft-card{margin:0;text-align:center}.mini-stats span{display:block;color:#71806b;font-size:12px}.mini-stats b{display:block;color:var(--green);font-size:26px;margin-top:5px}.dua-card small{color:#a27c36;font-weight:800}.dua-card p{font-size:16px;color:#284d39}.about-card{text-align:center}.about-mark{font-size:40px}.about-card h3{color:var(--green);margin:5px}.about-card hr{border:0;border-top:1px solid #e7d9b8;margin:16px 0}.contact-link{display:inline-block;margin-top:10px}
+@media(max-width:380px){.bottom-nav button span{font-size:9px}.bottom-nav{gap:1px}}
+</style>
+</head>
+<body>
+<main class="app">
+<div id="homePanel">
+<header><div class="brand">🌿 عالمي مع الذكر</div><div class="pill">اليوم: <b id="today">0</b></div></header>
+<section><h1 id="heading">الحمد لله</h1><p class="subtitle">اختر الذكر، ثم اضغط مع كل مرة</p></section>
+<section class="phrases" aria-label="اختيار الذكر">
+<button class="active" data-phrase="الحمد لله">الحمد لله</button>
+<button data-phrase="سبحان الله">سبحان الله</button>
+<button data-phrase="أستغفر الله">أستغفر الله</button>
+</section>
+<section class="scene" id="scene">
+<div class="sun"></div><div class="distant"></div><div class="ground"></div>
+<div class="flower f1">🌼</div><div class="flower f2">🌸</div><div class="flower f3">🌷</div>
+
+<div class="plant" id="plant">🌱</div>
+<canvas id="forestCanvas" aria-label="غابة تنمو مع الاستغفار"></canvas>
+<div class="forest-label" id="forestLabel" hidden><b>🌳 كل ذكر يغرس شجرة — <span id="treeCount">0</span> شجرة</b></div>
+<div class="jar-shell" id="jarShell">
+<div class="jar-mouth"></div>
+<div class="jar-glass"><canvas id="beadCanvas"></canvas></div>
+<div class="jar-caption">عدد هذا الذكر<strong id="phraseCount">0</strong></div>
+</div>
+</section>
+<section class="stats">
+<div class="stat">هذا الذكر<b id="current">0</b></div>
+<div class="stat">إجمالي اليوم<b id="daily">0</b></div>
+<div class="stat">الإجمالي الكلي<b id="total">0</b></div>
+</section>
+<button class="action" id="add">الحمد لله</button>
+<p class="hint">كل ضغطة تُسجّل مرة واحدة 🤍</p>
+<section class="worlds">
+<button data-world="jar">🫙 العلبة</button>
+<button class="active" data-world="garden">🌳 الشجرة</button>
+</section>
+<button class="reset" id="soundToggle">🔊 الصوت: مغلق</button>
+<section class="soft-card" id="reminderCard" style="margin:2px 0;padding:12px">
+  <b style="color:#24533e">🔔 تذكير طمأنينة</b>
+  <p style="font-size:12px;color:#71806b;margin:5px 0 8px">اختر وقتًا لتصلك رسالة ذكر لطيفة عندما يكون التطبيق مفتوحًا.</p>
+  <div style="display:flex;gap:7px;align-items:center;flex-wrap:wrap">
+    <input id="reminderTime" type="time" value="09:00" style="border:1px solid #d9caa7;border-radius:10px;padding:8px;font:inherit">
+    <button id="enableReminder" style="border:0;border-radius:11px;background:#24533e;color:white;padding:9px 12px;font:inherit">تفعيل التذكير</button>
+    <button id="testReminder" style="border:1px solid #d8c69b;border-radius:11px;background:#fff8e9;color:#31523c;padding:9px 12px;font:inherit">تجربة إشعار</button>
+  </div>
+  <p id="reminderStatus" style="font-size:11px;color:#71806b;margin:7px 0 0">التذكير غير مفعّل.</p>
+  <p style="font-size:10px;color:#8a806c;margin:5px 0 0">ملاحظة: التذكير المجدول يعمل أثناء بقاء التطبيق مفتوحًا؛ الإشعار التلقائي والتطبيق مغلق يحتاج خدمة Push خارجية.</p>
+</section>
+<button class="reset" id="installApp" hidden>📲 تثبيت طمأنينة</button>
+<button class="reset" id="reset">تصفير عداد هذا الذكر فقط</button>
+<button class="reset" id="resetForest">🌳 تصفير الغابة وإعادة زراعتها</button>
+<footer>يحفظ التطبيق أعدادك على هذا الجهاز — يمكن استخدامه دون إنترنت بعد أول تحميل كامل</footer>
+</div>
+<section id="page-adhkar" class="extra-page" hidden>
+  <h2>🌿 أذكار متنوعة</h2><p class="page-lead">اختر الذكر الذي تحب أن تردده اليوم.</p>
+  <div class="quick-list">
+    <button data-quick="الحمد لله">الحمد لله <span>ذكر الحمد</span></button>
+    <button data-quick="سبحان الله">سبحان الله <span>ذكر التسبيح</span></button>
+    <button data-quick="أستغفر الله">أستغفر الله <span>الاستغفار</span></button>
+    <button data-quick="الله أكبر">الله أكبر <span>التكبير</span></button>
+    <button data-quick="لا إله إلا الله">لا إله إلا الله <span>كلمة التوحيد</span></button>
+    <button data-quick="اللهم صل وسلم على نبينا محمد">اللهم صل وسلم على نبينا محمد <span>الصلاة على النبي ﷺ</span></button>
+  </div>
+  <div class="soft-card"><b>تذكير لطيف</b><p>اجعل لك وردًا يسيرًا تستطيع المحافظة عليه، فالقليل الدائم خير من الكثير المنقطع.</p></div>
+</section>
+<section id="page-goal" class="extra-page" hidden>
+  <h2>🎯 وردي اليومي</h2><p class="page-lead">حدد هدفًا بسيطًا، وتقدم إليه بهدوء.</p>
+  <div class="soft-card goal-card"><div class="goal-number"><b id="goalDone">0</b><span>من</span><b id="goalTarget">100</b></div><div class="progress"><i id="goalBar"></i></div><label for="goalInput">هدفي اليومي</label><div class="goal-edit"><input id="goalInput" type="number" min="1" max="10000" value="100"><button id="saveGoal">حفظ الهدف</button></div><p id="goalMessage">كل ذكر خطوة جميلة 🌱</p></div>
+</section>
+<section id="page-stats" class="extra-page" hidden>
+  <h2>📊 إنجازاتي</h2><p class="page-lead">تابع أثر الاستمرار يومًا بعد يوم.</p>
+  <div class="mini-stats"><div class="soft-card"><span>إجمالي الأذكار</span><b id="statTotal">0</b></div><div class="soft-card"><span>أذكار اليوم</span><b id="statToday">0</b></div><div class="soft-card"><span>هدف اليوم</span><b id="statGoal">100</b></div></div>
+  <div class="soft-card"><b>كلمة لك</b><p>لا تقارن وردك بأحد؛ المهم أن يكون لك نصيب ثابت من الذكر.</p></div>
+</section>
+<section id="page-dua" class="extra-page" hidden>
+  <h2>🤲 أدعية قصيرة</h2><p class="page-lead">اقرأ ما تيسر، وادعُ الله بما في قلبك.</p>
+  <article class="dua-card"><small>دعاء الطمأنينة</small><p>اللهم إني أسألك قلبًا مطمئنًا، ونفسًا راضية، وحياةً عامرةً بذكرك.</p></article>
+  <article class="dua-card"><small>دعاء التيسير</small><p>اللهم يسّر لي أمري، واشرح لي صدري، واكتب لي الخير حيث كان.</p></article>
+  <article class="dua-card"><small>دعاء الشكر</small><p>اللهم أعنّي على ذكرك وشكرك وحسن عبادتك.</p></article>
+  <article class="dua-card"><small>دعاء الاستغفار</small><p>رب اغفر لي وتب عليّ، إنك أنت التواب الرحيم.</p></article>
+</section>
+<section id="page-about" class="extra-page" hidden>
+  <h2>💚 عن طمأنينة</h2><div class="soft-card about-card"><div class="about-mark">🌿</div><h3>طمأنينة</h3><p>مساحة هادئة تساعدك على المحافظة على الذكر، ومتابعة وردك اليومي، وتذكّر أن بذكر الله تطمئن القلوب.</p><hr><b>المهندس عبدالرحمن سامي</b><p>تطوير ومتابعة التطبيق</p><p>لديك نصيحة أو اقتراح؟ يسعدنا سماعك.</p><a class="contact-link" href="https://wa.me/967771072866" target="_blank" rel="noopener">تواصل معنا عبر واتساب</a></div>
+  <div class="soft-card"><b>تنبيه حول البيانات</b><p>عداداتك محفوظة محليًا على هذا الجهاز. عند مسح بيانات المتصفح أو تغيير الجهاز قد تفقدها.</p></div>
+</section>
+<nav class="bottom-nav" aria-label="التنقل داخل التطبيق">
+ <button class="active" data-page="home">🏠<span>الرئيسية</span></button><button data-page="adhkar">📿<span>الأذكار</span></button><button data-page="goal">🎯<span>وردي</span></button><button data-page="dua">🤲<span>أدعية</span></button><button data-page="stats">📊<span>إنجازاتي</span></button><button data-page="about">💚<span>عنّا</span></button>
+</nav>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+const todayKey=new Date().toLocaleDateString('en-CA');
+let store=JSON.parse(localStorage.getItem('dhikr_v2')||'{}');
+if(store.date!==todayKey){store.date=todayKey;store.daily=0;store.byDay={}}
+store.counts=store.counts||{'الحمد لله':0,'سبحان الله':0,'أستغفر الله':0};
+store.daily=store.daily||0;store.total=store.total||0;
+// عداد مستقل للغابة حتى يمكن تصفير الأشجار دون حذف سجل الأذكار.
+if(typeof store.trees!=='number')store.trees=store.total;
+let selected='الحمد لله',world='garden';
+let forestGrowth=1;
+const counts=()=>store.counts[selected]||0;
+function save(){localStorage.setItem('dhikr_v2',JSON.stringify(store));render()}
+function render(){
+$('heading').textContent=selected;$('add').textContent=selected;
+$('phraseCount').textContent=counts();$('current').textContent=counts();
+$('today').textContent=store.daily;$('daily').textContent=store.daily;$('total').textContent=store.total;
+const level=Math.min(5,Math.floor(store.total/25));
+$('plant').textContent=['🌱','🌿','🪴','🌳','🌸','🌺'][level];
+updateForest();
+}
+document.querySelectorAll('[data-phrase]').forEach(btn=>btn.addEventListener('click',()=>{
+selected=btn.dataset.phrase;document.querySelectorAll('[data-phrase]').forEach(x=>x.classList.toggle('active',x===btn));render();
+}));
+document.querySelectorAll('[data-world]').forEach(btn=>btn.addEventListener('click',()=>{
+world=btn.dataset.world;document.querySelectorAll('[data-world]').forEach(x=>x.classList.toggle('active',x===btn));
+$('scene').classList.toggle('garden',world==='garden');
+$('jarShell').style.display=world==='jar'?'block':'none';$('plant').style.display=world==='garden'?'none':'block';
+$('forestLabel').hidden=world!=='garden';
+// انتظر حتى يكتمل إظهار العلبة قبل قياس مساحة الـ canvas؛
+// كانت الكرات تُحسب وهي مخفية فتظهر متأخرة أو خارج مكانها.
+if(world==='jar'){
+  requestAnimationFrame(()=>{
+    resize();
+    initBeads();
+  });
+}else{
+  // انتظر اكتمال تبديل العرض حتى يحصل Canvas على أبعاده الحقيقية قبل الرسم.
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    resizeForest();
+    drawForest();
+  }));
+}
+}));
+$('reset').addEventListener('click',()=>{
+if(confirm('هل تريد تصفير عداد هذا الذكر؟ لن يتغير إجمالي اليوم.')){store.counts[selected]=0;save();beads=[];draw()}
+});
+$('resetForest').addEventListener('click',()=>{
+ if(confirm('هل تريد تصفير الغابة فقط؟ ستختفي الأشجار وتبدأ من جديد، دون تغيير عدادات الأذكار أو إجمالي إنجازاتك.')){
+  store.trees=0;save();
+ }
+});
+$('add').addEventListener('click',()=>{
+store.counts[selected]=(store.counts[selected]||0)+1;store.daily++;store.total++;store.trees=(store.trees||0)+1;save();
+if(world==='jar')addBead();
+// render() حدّث الغابة مرة واحدة؛ لا نكرر رسم المشهد في نفس الضغطة.
+playSoftSound();
+if(navigator.vibrate)navigator.vibrate(8);
+if(counts()%33===0){$('add').textContent='ما شاء الله، أحسنت';setTimeout(()=>$('add').textContent=selected,1100)}
+});
+// Beads use fixed resting slots: each bead falls smoothly into place
+// without repeated collisions or irritating bouncing.
+const canvas=$('beadCanvas'),ctx=canvas.getContext('2d');
+let beads=[], soundOn=false, audioCtx=null, beadFrame=null;
+function resize(){
+ const r=canvas.getBoundingClientRect(),dpr=Math.min(devicePixelRatio||1,2);
+ canvas.width=Math.round(r.width*dpr);canvas.height=Math.round(r.height*dpr);
+ ctx.setTransform(dpr,0,0,dpr,0,0);draw();
+}
+function slotFor(index){
+ const w=canvas.clientWidth,h=canvas.clientHeight;
+ const cols=8, gap=22, row=Math.floor(index/cols), col=index%cols;
+ const offset=(row%2)*gap/2;
+ return {x:w/2+(col-(cols-1)/2)*gap+offset,
+         y:h-18-row*19};
+}
+function addBead(){
+ const index=beads.length, target=slotFor(index);
+ const sx=canvas.clientWidth/2+(Math.random()-.5)*8;
+ beads.push({x:sx,y:-18,sx,sy:-18,tx:target.x,ty:target.y,r:10.2,started:performance.now(),duration:520});
+ if(beadFrame===null)beadFrame=requestAnimationFrame(draw);
+}
+function draw(now=performance.now()){
+ beadFrame=null;
+ const w=canvas.clientWidth,h=canvas.clientHeight;
+ let moving=false;
+ ctx.clearRect(0,0,w,h);
+ beads.forEach(b=>{
+   if(b.duration){
+     const p=Math.min(1,(now-b.started)/b.duration);
+     const ease=1-Math.pow(1-p,3);
+     b.x=b.sx+(b.tx-b.sx)*ease;
+     b.y=b.sy+(b.ty-b.sy)*ease;
+     if(p>=1){b.x=b.tx;b.y=b.ty;b.duration=0}else moving=true
+   }
+   ctx.save();
+   ctx.shadowColor='rgba(35,45,35,.20)';ctx.shadowBlur=3;ctx.shadowOffsetY=2;
+   const g=ctx.createRadialGradient(b.x-b.r*.35,b.y-b.r*.4,b.r*.08,b.x,b.y,b.r*1.15);
+   g.addColorStop(0,'#ffffff');g.addColorStop(.24,'#fffdf4');
+   g.addColorStop(.67,'#e9dfc9');g.addColorStop(1,'#a99d87');
+   ctx.beginPath();ctx.arc(b.x,b.y,b.r,0,Math.PI*2);ctx.fillStyle=g;ctx.fill();
+   ctx.shadowColor='transparent';
+   ctx.beginPath();ctx.ellipse(b.x-b.r*.28,b.y-b.r*.35,b.r*.22,b.r*.12,-.6,0,Math.PI*2);
+   ctx.fillStyle='rgba(255,255,255,.85)';ctx.fill();ctx.restore();
+ });
+ if(moving)beadFrame=requestAnimationFrame(draw);
+}
+function initBeads(){
+ beads=[];
+ const n=Math.min(counts(),65);
+ for(let i=0;i<n;i++){
+   const p=slotFor(i);
+   beads.push({x:p.x,y:p.y,tx:p.x,ty:p.y,r:10.2,duration:0});
+ }
+ draw(performance.now());
+}
+// غابة تفاعلية: كل ضغطة على أي ذكر تضيف شجرة جديدة.
+const forest=$('forestCanvas'), fctx=forest.getContext('2d');
+let forestAnim=1, forestFrame=0;
+function resizeForest(){
+ if(world!=='garden')return;
+ const r=forest.getBoundingClientRect();
+ if(r.width<2||r.height<2)return;
+ const dpr=Math.min(window.devicePixelRatio||1,1.5);
+ const cw=Math.round(r.width*dpr),ch=Math.round(r.height*dpr);
+ if(forest.width!==cw||forest.height!==ch){
+   forest.width=cw;forest.height=ch;
+   fctx.setTransform(dpr,0,0,dpr,0,0);
+ }
+ drawForest();
+}
+function updateForest(){
+ const n=store.trees||0;
+ if($('treeCount'))$('treeCount').textContent=n.toLocaleString('ar');
+ if(world==='garden')drawForest();
+}
+function drawTree(x,groundY,scale,age){
+ const h=scale*(.25+.75*age), trunk=7*scale;
+ fctx.save();fctx.translate(x,groundY);fctx.scale(h,h);
+ // ظل وجذع
+ fctx.fillStyle='rgba(35,67,39,.16)';fctx.beginPath();fctx.ellipse(2,3,25,6,0,0,Math.PI*2);fctx.fill();
+ fctx.fillStyle='#805536';fctx.fillRect(-trunk/2,-48,trunk,49);
+ fctx.strokeStyle='#9a7048';fctx.lineWidth=2;fctx.beginPath();fctx.moveTo(0,-24);fctx.lineTo(-10,-36);fctx.moveTo(0,-30);fctx.lineTo(10,-41);fctx.stroke();
+ // تاج طبقات بألوان طبيعية
+ const greens=['#397b4c','#4b9657','#69ad66'];
+ for(let k=0;k<3;k++){
+  fctx.beginPath();fctx.moveTo(0,-105+k*22);fctx.quadraticCurveTo(-43-k*2,-70+k*18,-34-k*2,-55+k*20);fctx.quadraticCurveTo(-43,-39+k*20,-7,-48+k*20);fctx.quadraticCurveTo(0,-35+k*20,7,-48+k*20);fctx.quadraticCurveTo(43,-39+k*20,34+k*2,-55+k*20);fctx.quadraticCurveTo(43+k*2,-70+k*18,0,-105+k*22);fctx.closePath();fctx.fillStyle=greens[k];fctx.fill();
+ }
+ fctx.fillStyle='#a7d98a';fctx.beginPath();fctx.arc(-10,-82,4,0,Math.PI*2);fctx.arc(13,-67,3,0,Math.PI*2);fctx.fill();
+ fctx.restore();
+}
+function drawForest(growing=false){
+ if(!forest||!fctx)return;
+ const w=forest.clientWidth,h=forest.clientHeight;if(!w||!h)return;
+ const n=store.trees||0, shown=Math.min(n,200);
+ fctx.clearRect(0,0,w,h);
+ const sky=fctx.createLinearGradient(0,0,0,h);sky.addColorStop(0,'#bfe7ef');sky.addColorStop(.62,'#e3f2d2');sky.addColorStop(1,'#8fbd79');fctx.fillStyle=sky;fctx.fillRect(0,0,w,h);
+ // شمس وغيوم
+ fctx.fillStyle='#fff0b0';fctx.shadowColor='#fff2bd';fctx.shadowBlur=22;fctx.beginPath();fctx.arc(w-48,52,23,0,Math.PI*2);fctx.fill();fctx.shadowBlur=0;
+ fctx.fillStyle='rgba(255,255,255,.65)';for(const [cx,cy] of [[w*.22,54],[w*.55,34]]){fctx.beginPath();fctx.arc(cx,cy,12,0,Math.PI*2);fctx.arc(cx+13,cy-5,16,0,Math.PI*2);fctx.arc(cx+29,cy,11,0,Math.PI*2);fctx.fill()}
+ // تلال بعيدة
+ fctx.fillStyle='#a4cc91';fctx.beginPath();fctx.moveTo(0,h*.62);fctx.quadraticCurveTo(w*.28,h*.34,w*.55,h*.63);fctx.quadraticCurveTo(w*.78,h*.38,w,h*.59);fctx.lineTo(w,h);fctx.lineTo(0,h);fctx.fill();
+ fctx.fillStyle='#6eaa68';fctx.beginPath();fctx.moveTo(0,h*.76);fctx.quadraticCurveTo(w*.4,h*.54,w*.68,h*.75);fctx.quadraticCurveTo(w*.86,h*.62,w,h*.72);fctx.lineTo(w,h);fctx.lineTo(0,h);fctx.fill();
+ fctx.fillStyle='#67904f';fctx.fillRect(0,h*.84,w,h*.16);
+ // حتى 200 شجرة صغيرة مرتبة في 20 عمودًا و10 صفوف لتظهر الغابة كاملة.
+ const cols=20,rows=10,cellW=w/cols,cellH=Math.max(1,h*.68/rows);
+ const positions=[];
+ for(let i=0;i<shown;i++){
+   const row=Math.floor(i/cols),col=i%cols;
+   const xx=(col+.5)*cellW;
+   const yy=h*.83-row*cellH;
+   const scale=Math.min(.17,cellW/90,cellH/115);
+   positions.push({x:xx,y:yy,scale,i});
+ }
+ positions.sort((a,b)=>a.y-b.y);
+ positions.forEach(o=>drawTree(o.x,o.y,o.scale,1));
+ if(n===0){fctx.fillStyle='#315d3d';fctx.font='bold 17px system-ui';fctx.textAlign='center';fctx.fillText('ابدأ الذكر… وستنمو غابتك 🌱',w/2,h*.72)}
+ if(n>200){fctx.fillStyle='#fffdf0';fctx.font='bold 11px system-ui';fctx.textAlign='center';fctx.fillText('وصلت الغابة إلى 200 شجرة ظاهرة 🌳',w/2,h-10)}
+}
+function playSoftSound(){
+ if(!soundOn)return;
+ try{
+   audioCtx=audioCtx||new (window.AudioContext||window.webkitAudioContext)();
+   if(audioCtx.state==='suspended')audioCtx.resume();
+   const osc=audioCtx.createOscillator(),gain=audioCtx.createGain();
+   osc.type='sine';osc.frequency.setValueAtTime(660,audioCtx.currentTime);
+   osc.frequency.exponentialRampToValueAtTime(440,audioCtx.currentTime+.055);
+   gain.gain.setValueAtTime(.0001,audioCtx.currentTime);
+   gain.gain.exponentialRampToValueAtTime(.045,audioCtx.currentTime+.008);
+   gain.gain.exponentialRampToValueAtTime(.0001,audioCtx.currentTime+.085);
+   osc.connect(gain);gain.connect(audioCtx.destination);
+   osc.start();osc.stop(audioCtx.currentTime+.09);
+ }catch(e){}
+}
+$('soundToggle').addEventListener('click',()=>{
+ soundOn=!soundOn;
+ $('soundToggle').textContent=soundOn?'🔔 الصوت: يعمل':'🔊 الصوت: مغلق';
+ if(soundOn)playSoftSound();
+});
+let forestResizeTimer;
+window.addEventListener('resize',()=>{
+ clearTimeout(forestResizeTimer);
+ forestResizeTimer=setTimeout(()=>{
+   if(world==='jar'){resize();initBeads()}
+   else requestAnimationFrame(()=>requestAnimationFrame(resizeForest));
+ },120);
+});
+render();$('scene').classList.add('garden');$('jarShell').style.display='none';$('plant').style.display='none';$('forestLabel').hidden=false;resizeForest();
+// صفحات التطبيق والتنقل بينها
+const homePanel=$('homePanel');
+function showPage(name){
+ homePanel.hidden=name!=='home';
+ document.querySelectorAll('.extra-page').forEach(p=>p.hidden=p.id!=='page-'+name);
+ document.querySelectorAll('[data-page]').forEach(b=>b.classList.toggle('active',b.dataset.page===name));
+ if(name==='goal'||name==='stats')updateGoal();
+ window.scrollTo({top:0,behavior:'smooth'});
+}
+document.querySelectorAll('[data-page]').forEach(b=>b.addEventListener('click',()=>showPage(b.dataset.page)));
+document.querySelectorAll('[data-quick]').forEach(b=>b.addEventListener('click',()=>{
+ const phrase=b.dataset.quick;
+ if(!store.counts[phrase])store.counts[phrase]=0;
+ selected=phrase;
+ if(!document.querySelector('[data-phrase="'+phrase+'"]')){
+   const btn=document.createElement('button');btn.dataset.phrase=phrase;btn.textContent=phrase;
+   btn.addEventListener('click',()=>{selected=phrase;document.querySelectorAll('[data-phrase]').forEach(x=>x.classList.toggle('active',x===btn));render()});
+   document.querySelector('.phrases').appendChild(btn);
+ }
+ document.querySelectorAll('[data-phrase]').forEach(x=>x.classList.toggle('active',x.dataset.phrase===phrase));
+ render();showPage('home');
+}));
+let dailyGoal=Number(localStorage.getItem('tamanina_goal')||100);
+function updateGoal(){
+ const done=store.daily||0, pct=Math.min(100,done/dailyGoal*100);
+ $('goalDone').textContent=done;$('goalTarget').textContent=dailyGoal;$('goalBar').style.width=pct+'%';
+ $('goalInput').value=dailyGoal;$('goalMessage').textContent=done>=dailyGoal?'ما شاء الله! حققت هدفك اليوم 🌟':'باقي لك '+Math.max(0,dailyGoal-done)+' ذكر لإكمال هدفك 🌱';
+ $('statTotal').textContent=store.total||0;$('statToday').textContent=done;$('statGoal').textContent=dailyGoal;
+}
+$('saveGoal').addEventListener('click',()=>{const v=Math.max(1,Math.min(10000,Number($('goalInput').value)||100));dailyGoal=v;localStorage.setItem('tamanina_goal',String(v));updateGoal()});
+const oldSave=save;
+save=function(){localStorage.setItem('dhikr_v2',JSON.stringify(store));render();updateGoal()};
+
+updateGoal();
+
+// PWA: install the service worker and keep the original app available offline.
+let tamaninaSW = null;
+if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js')
+      .then(reg => { tamaninaSW = reg; reg.update().catch(()=>{}); })
+      .catch(err => console.warn('Service worker registration failed:', err));
+  });
+}
+
+// Show the native install prompt when the browser makes it available.
+let deferredInstallPrompt = null;
+const installButton = $('installApp');
+window.addEventListener('beforeinstallprompt', event => {
+  event.preventDefault();
+  deferredInstallPrompt = event;
+  installButton.hidden = false;
+});
+installButton.addEventListener('click', async () => {
+  if (!deferredInstallPrompt) return;
+  deferredInstallPrompt.prompt();
+  await deferredInstallPrompt.userChoice;
+  deferredInstallPrompt = null;
+  installButton.hidden = true;
+});
+window.addEventListener('appinstalled', () => {
+  installButton.hidden = true;
+  $('reminderStatus').textContent = 'تم تثبيت طمأنينة على جهازك 🌿';
+});
+
+// Daily reminder. Browser notifications require permission and this timer runs
+// while the app page is open; closed-app reminders need a push service.
+const reminderTimeInput = $('reminderTime');
+const reminderStatus = $('reminderStatus');
+const reminderButton = $('enableReminder');
+let reminderSettings = {};
+try { reminderSettings = JSON.parse(localStorage.getItem('tamanina_reminder') || '{}'); } catch(e) {}
+if (reminderSettings.time) reminderTimeInput.value = reminderSettings.time;
+if (reminderSettings.enabled) reminderStatus.textContent = 'التذكير مفعّل للوقت ' + reminderTimeInput.value + ' (أثناء فتح التطبيق).';
+const reminderMessages = [
+  'لا تنسَ ذكر الله، ففي ذكره طمأنينة للقلب 🌿',
+  'خذ دقيقة للاستغفار؛ لعلها تشرح صدرك 🤍',
+  'سبّح الله واملأ وقتك نورًا 🌸',
+  'اللهم أعنّا على ذكرك وشكرك وحسن عبادتك.',
+  'صلّ على النبي ﷺ، واجعل لك من يومك نصيبًا من الصلاة عليه.'
+];
+async function askNotificationPermission() {
+  if (!('Notification' in window)) {
+    reminderStatus.textContent = 'المتصفح الحالي لا يدعم الإشعارات.';
+    return false;
+  }
+  let permission = Notification.permission;
+  if (permission === 'default') permission = await Notification.requestPermission();
+  if (permission !== 'granted') {
+    reminderStatus.textContent = 'لم تسمح بالإشعارات. فعّلها من إعدادات المتصفح.';
+    return false;
+  }
+  return true;
+}
+async function sendTamaninaNotification(message) {
+  if (!(await askNotificationPermission())) return;
+  const options = { body: message, icon: './icon-192.png', badge: './icon-192.png', tag: 'tamanina-reminder' };
+  try {
+    if (tamaninaSW) await tamaninaSW.showNotification('طمأنينة 🌿', options);
+    else new Notification('طمأنينة 🌿', options);
+  } catch(e) {
+    try { new Notification('طمأنينة 🌿', options); } catch(err) {}
+  }
+}
+reminderButton.addEventListener('click', async () => {
+  if (reminderSettings.enabled) {
+    reminderSettings.enabled = false;
+    localStorage.setItem('tamanina_reminder', JSON.stringify(reminderSettings));
+    reminderStatus.textContent = 'تم إيقاف التذكير.';
+    reminderButton.textContent = 'تفعيل التذكير';
+    return;
+  }
+  if (!(await askNotificationPermission())) return;
+  reminderSettings = { enabled: true, time: reminderTimeInput.value || '09:00' };
+  localStorage.setItem('tamanina_reminder', JSON.stringify(reminderSettings));
+  reminderStatus.textContent = 'التذكير مفعّل للوقت ' + reminderSettings.time + ' (أثناء فتح التطبيق).';
+  reminderButton.textContent = 'إيقاف التذكير';
+});
+if (reminderSettings.enabled) reminderButton.textContent = 'إيقاف التذكير';
+reminderTimeInput.addEventListener('change', () => {
+  if (reminderSettings.enabled) {
+    reminderSettings.time = reminderTimeInput.value;
+    localStorage.setItem('tamanina_reminder', JSON.stringify(reminderSettings));
+    reminderStatus.textContent = 'تم تحديث وقت التذكير إلى ' + reminderSettings.time + '.';
+  }
+});
+$('testReminder').addEventListener('click', () => {
+  const message = reminderMessages[Math.floor(Math.random() * reminderMessages.length)];
+  sendTamaninaNotification(message);
+});
+function checkTamaninaReminder() {
+  if (!reminderSettings.enabled || !reminderSettings.time) return;
+  const now = new Date();
+  const current = String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0');
+  const day = now.getFullYear() + '-' + (now.getMonth()+1) + '-' + now.getDate();
+  if (current >= reminderSettings.time && localStorage.getItem('tamanina_last_reminder') !== day) {
+    localStorage.setItem('tamanina_last_reminder', day);
+    sendTamaninaNotification(reminderMessages[Math.floor(Math.random() * reminderMessages.length)]);
+  }
+}
+setInterval(checkTamaninaReminder, 20000);
+</script>
+</body></html>
